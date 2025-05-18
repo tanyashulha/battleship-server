@@ -1,15 +1,26 @@
-import { ILoginDataFlexable } from 'interfaces/login-data.interface.js';
-import { IUserFlexable } from 'interfaces/user.interface';
+import { IWinners } from 'interfaces/winners.interface';
 import WebSocket from 'ws';
 
+const initialUserUpdatedState = {
+    status: true,
+    isOwnerRoom: false,
+    isGame: false,
+    idRoom: 0,
+    idGame: 0,
+    singlePlay: false,
+}
+
 class UsersDB {
-    usersDB: Map<WebSocket, IUserFlexable> = new Map();
-    userStorage: Map<string, ILoginDataFlexable> = new Map();
+    usersDB: Map<WebSocket, any> = new Map();
+    userStorage: Map<string, any> = new Map();
+    winners: IWinners[] = [];
+    socketsUsers: Map<number, WebSocket> = new Map();
 
     id: number = 0;
 
-    setUser(socket: WebSocket, user: IUserFlexable) {
+    setUser(socket: WebSocket, user: any) {
         this.usersDB.set(socket, user);
+        this.socketsUsers.set(user.data.index, socket);
         this.id++;
     }
 
@@ -17,19 +28,33 @@ class UsersDB {
         return this.usersDB.get(socket);
     }
 
-    isAlreadyExist(name: string): boolean {
+    isAlreadyExisInStorage(name: string): boolean {
         return this.userStorage.has(name);
     }
 
-    getUserID(): number {
-        return this.id;
+    isAlreadyExisInDB(socket: WebSocket): boolean {
+        return this.usersDB.has(socket);
     }
 
-    setUserStorage(user: ILoginDataFlexable) {
-        this.userStorage.set(user.name, user);
+    setUserStorage(user: any) {
+        this.userStorage.set(user.name, {
+            ...user,
+            ...initialUserUpdatedState,
+        });
+    }
 
-        console.log(this.userStorage)
-        console.log(this.usersDB)
+    getUserStorage(name: string) {
+        return this.userStorage.get(name);
+    }
+
+    changeUserStatus(name: string, status: boolean, isOwnerRoom = false, isGame = false) {
+        const user = this.userStorage.get(name);
+        this.userStorage.set(name, { ...user!, status, isOwnerRoom, isGame });
+    }
+
+    changeRoomId(name: string, roomId: number) {
+        const user = this.userStorage.get(name);
+        this.userStorage.set(name, { ...user!, roomId });
     }
 }
 

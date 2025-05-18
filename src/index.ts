@@ -2,6 +2,7 @@ import { httpServer } from './http_server/index';
 import { WebSocketServer } from 'ws';
 import { register } from './register';
 import { ConnectionTypeEnum } from './enums/connection-type.enum';
+import { createRoom } from './create-room';
 
 const HTTP_PORT = 8181;
 const WEBSOCKET_PORT = 3000;
@@ -18,6 +19,9 @@ webSocketServer.on('connection', (webSocket) => {
             switch (data?.type) {
                 case ConnectionTypeEnum.REG:
                     register(data, webSocket);
+                    break;
+                case ConnectionTypeEnum.CREATE_ROOM:
+                    createRoom(data, webSocket);
                     break;
             }
         } catch (err) {
