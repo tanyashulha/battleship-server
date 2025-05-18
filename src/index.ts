@@ -1,6 +1,7 @@
-import { httpServer } from './http_server/index.js';
+import { httpServer } from './http_server/index';
 import { WebSocketServer } from 'ws';
 import { register } from './register';
+import { ConnectionTypeEnum } from './enums/connection-type.enum';
 
 const HTTP_PORT = 8181;
 const WEBSOCKET_PORT = 3000;
@@ -14,7 +15,11 @@ webSocketServer.on('connection', (webSocket) => {
     webSocket.on('message', (message: Buffer) => {
         try {
             const data = JSON.parse(message.toString());
-            register(data, webSocket);
+            switch (data?.type) {
+                case ConnectionTypeEnum.REG:
+                    register(data, webSocket);
+                    break;
+            }
         } catch (err) {
             console.log(err)
         }

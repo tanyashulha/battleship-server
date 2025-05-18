@@ -1,4 +1,8 @@
 export interface ILoginData {
-    login: string;
+    name: string;
     password: string;
+}
+
+export interface ILoginDataFlexable extends ILoginData {
+    [additionalField: string]: any;
 }

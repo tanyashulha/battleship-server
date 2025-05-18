@@ -5,3 +5,7 @@ export interface IUser {
     data: string;
     connectionType: ConnectionTypeEnum,
 }
+
+export interface IUserFlexable extends IUser {
+    [additionalField: string]: any;
+}
