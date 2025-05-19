@@ -38,7 +38,7 @@ export const addUserToRoom = (object: IUser, socket: WebSocket) => {
             userSocket?.send(parseData(ConnectionTypeEnum.CREATE_GAME, JSON.stringify({ idGame: data.indexRoom, idPlayer: idPlayers[indx] })));
         });
 
-        usersDB.socketsUsers.values().forEach(user => {
+        usersDB.socketsUsers.forEach(user => {
             user.send(parseData(ConnectionTypeEnum.UPDATE_ROOM, updateRooms));
         });
     }
