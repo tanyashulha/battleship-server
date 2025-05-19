@@ -1,11 +1,13 @@
 import { ILoginData } from 'interfaces/login-data.interface';
 import { ConnectionTypeEnum } from './enums/connection-type.enum';
-import { IUser } from './interfaces/user.interface';
+import { IGeneral } from './interfaces/general.interface';
 import { usersDB } from './db/player-data-storage';
 import WebSocket from 'ws';
 import { roomDB } from './db/room-data-storage';
+import { ErrorsEnum } from './enums/erros.enum';
+import { parseData } from './utils/parse-data.utils';
 
-export const register = (user: IUser, socket: WebSocket) => {
+export const register = (user: IGeneral, socket: WebSocket) => {
     const data = JSON.parse(user.data) as ILoginData;
 
     if (data) {
@@ -21,25 +23,17 @@ export const register = (user: IUser, socket: WebSocket) => {
     }
 };
 
-function parseData(type: ConnectionTypeEnum, data: string): string {
-    return JSON.stringify({
-        type,
-        data,
-        id: 0,
-    });
-}
-
 function generateIfAlreadyExists(data: ILoginData, socket: WebSocket) {
     const initialObj = { password: data.password, name: data.name, index: usersDB.id };
     const storageUser = usersDB.getUserStorage(data.name)!;
     let user = { ...initialObj, error: false, errorText: '' };
 
     if (storageUser.password !== data.password) {
-        user = { ...initialObj, error: true, errorText: 'This username is already registeredt' };
+        user = { ...initialObj, error: true, errorText: ErrorsEnum.ThisUsernameIsAlreadyRegistered };
     }
 
     if (storageUser.status) {
-        user = { ...initialObj, error: true, errorText: 'User is already in the game' };
+        user = { ...initialObj, error: true, errorText: ErrorsEnum.UserIsAlreadyInTheGame };
     }
 
     if (user.error) {
@@ -64,8 +58,8 @@ function generateNew(data: ILoginData, socket: WebSocket) {
     const initialObj = { password: data.password, name: data.name, index: usersDB.id };
 
     const user = data.password.length < minimumLength || data.name.length < minimumLength
-        ? { ...initialObj, error: true, errorText: 'Allowed more than 4 characters'}
-        : { ...initialObj, error: false, errorText: ''};
+        ? { ...initialObj, error: true, errorText: ErrorsEnum.AllowedMoreThan4Characters }
+        : { ...initialObj, error: false, errorText: '' };
 
     if (user.error) {
         socket.send(parseData(ConnectionTypeEnum.REG, JSON.stringify(user)));

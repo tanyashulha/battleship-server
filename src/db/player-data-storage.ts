@@ -28,6 +28,10 @@ class UsersDB {
         return this.usersDB.get(socket);
     }
 
+    getSocketUserById(userId: number) {
+        return this.socketsUsers.get(userId);
+    }
+
     isAlreadyExisInStorage(name: string): boolean {
         return this.userStorage.has(name);
     }

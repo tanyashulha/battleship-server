@@ -2,6 +2,7 @@ import WebSocket from 'ws';
 import { usersDB } from './db/player-data-storage';
 import { ConnectionTypeEnum } from './enums/connection-type.enum';
 import { roomDB } from './db/room-data-storage';
+import { parseData } from './utils/parse-data.utils';
 
 export const createRoom = (_: unknown, socket: WebSocket) => {
     if (!usersDB.isAlreadyExistInDB(socket)) return;
@@ -22,14 +23,6 @@ export const createRoom = (_: unknown, socket: WebSocket) => {
         user.send(parseData(ConnectionTypeEnum.UPDATE_ROOM, rooms));
     });
 };
-
-function parseData(type: ConnectionTypeEnum, data: string): string {
-    return JSON.stringify({
-        type,
-        data,
-        id: 0,
-    });
-}
 
 function updateRoom(roomId: number, name: string, index: number) {
     return {

@@ -2,9 +2,10 @@ import WebSocket from 'ws';
 import { usersDB } from './db/player-data-storage';
 import { ConnectionTypeEnum } from './enums/connection-type.enum';
 import { roomDB } from './db/room-data-storage';
-import { IUser } from './interfaces/user.interface';
+import { IGeneral } from './interfaces/general.interface';
+import { parseData } from './utils/parse-data.utils';
 
-export const addUserToRoom = (object: IUser, socket: WebSocket) => {
+export const addUserToRoom = (object: IGeneral, socket: WebSocket) => {
     const data = JSON.parse(object.data);
     const room = roomDB.getRoom(data.indexRoom);
     const currentUser = usersDB.getUser(socket);
@@ -42,14 +43,6 @@ export const addUserToRoom = (object: IUser, socket: WebSocket) => {
             user.send(parseData(ConnectionTypeEnum.UPDATE_ROOM, updateRooms));
         });
     }
-}
-
-function parseData(type: ConnectionTypeEnum, data: string): string {
-    return JSON.stringify({
-        type,
-        data,
-        id: 0,
-    });
 }
 
 function updateUsersStore(name: string, index: any) {
