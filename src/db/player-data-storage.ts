@@ -32,7 +32,7 @@ class UsersDB {
         return this.userStorage.has(name);
     }
 
-    isAlreadyExisInDB(socket: WebSocket): boolean {
+    isAlreadyExistInDB(socket: WebSocket): boolean {
         return this.usersDB.has(socket);
     }
 
@@ -55,6 +55,11 @@ class UsersDB {
     changeRoomId(name: string, roomId: number) {
         const user = this.userStorage.get(name);
         this.userStorage.set(name, { ...user!, roomId });
+    }
+
+    changeUserGameId(name: string, idGame: number) {
+        const user = this.userStorage.get(name);
+        this.userStorage.set(name, { ...user!, idGame });
     }
 }
 

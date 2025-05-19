@@ -4,7 +4,7 @@ import { ConnectionTypeEnum } from './enums/connection-type.enum';
 import { roomDB } from './db/room-data-storage';
 
 export const createRoom = (_: unknown, socket: WebSocket) => {
-    if (!usersDB.isAlreadyExisInDB(socket)) return;
+    if (!usersDB.isAlreadyExistInDB(socket)) return;
 
     const user = usersDB.getUser(socket);
 

@@ -13,6 +13,10 @@ class RoomDB {
         }
     }
 
+    getRoom(roomId: number) {
+        return this.roomDB.find(room => room.roomId === roomId);
+    }
+
     getRoomId() {
         return this.roomId;
     }
@@ -27,6 +31,10 @@ class RoomDB {
             return acc;
         }, []);
         return checkPlayerCreate.some(c => c);
+    }
+
+    deleteRoom(idRoom: number) {
+        this.roomDB = this.roomDB.filter((item) => item.roomId !== idRoom);
     }
 }
 

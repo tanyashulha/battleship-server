@@ -3,6 +3,7 @@ import { WebSocketServer } from 'ws';
 import { register } from './register';
 import { ConnectionTypeEnum } from './enums/connection-type.enum';
 import { createRoom } from './create-room';
+import { addUserToRoom } from './add-user-to-room';
 
 const HTTP_PORT = 8181;
 const WEBSOCKET_PORT = 3000;
@@ -22,6 +23,9 @@ webSocketServer.on('connection', (webSocket) => {
                     break;
                 case ConnectionTypeEnum.CREATE_ROOM:
                     createRoom(data, webSocket);
+                    break;
+                case ConnectionTypeEnum.ADD_USER_TO_ROOM:
+                    addUserToRoom(data, webSocket);
                     break;
             }
         } catch (err) {
